@@ -1,0 +1,11 @@
+#---------------------------------------------------------------------------
+#
+# systematic-config.cmake - CMake configuration file for external projects.
+# Use this by invoking
+#
+#   find_package(systematic)
+#
+# The module defines systematic::systematic IMPORTED target
+
+include("${CMAKE_CURRENT_LIST_DIR}/systematic-targets.cmake")
+message(STATUS "Found systematic")

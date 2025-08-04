@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>systematic</name>
+  <version>0.0.1</version>
+  <description>C++/RAII wrappers for low-level and system stuff</description>
+  <maintainer email="muhzyk.belarus@protonmail.com">ugol-1</maintainer>
+  <license>BSD 3-Clause License</license>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>

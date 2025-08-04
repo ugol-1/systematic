@@ -1,2 +1,2 @@
 # systematic
-C++/RAII wrappers for low-level &amp; system stuff
+C++/RAII wrappers for low-level and system stuff

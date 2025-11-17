@@ -3,9 +3,10 @@
 #include <sys/mman.h>
 
 #include <system_error>
+#include <utility>
 
 
-namespace cyboola_core
+namespace systematic :: posix
 {
 /**
  * @brief RAII manager for a file memory mapping
@@ -26,20 +27,65 @@ public:
      * @param offset offset of the mapped region from the beginning of the file in bytes.
      *
     */
-    explicit MemoryMapping(size_t length, int prot, int flags, int fd, int offset = 0)
+    explicit MemoryMapping(size_t length, int prot, int flags, int fd, off_t offset = 0)
     :   ptr_ {::mmap(nullptr, length, prot, flags, fd, offset)}
+    ,   length_ {length}
     {
         if (ptr_ == MAP_FAILED)
             throw std::system_error {errno, std::system_category(), "mmap() failed"};
     }
+
+
+    /**
+     * @brief Disable copy constructor
+     */
+    MemoryMapping(MemoryMapping const&) = delete;
+
+
+    /**
+     * @brief Move constructor
+    */
+    MemoryMapping(MemoryMapping&& other) noexcept
+    {
+        swap(other);
+    }
+
 
     /**
      * @brief Unmap the memory region.
     */
     ~MemoryMapping()
     {
-        munmap(ptr_, length_);
+        if (ptr_)
+            ::munmap(ptr_, length_);
     }
+
+
+    /**
+     * @brief Disable copy assignment
+     */
+    MemoryMapping& operator=(MemoryMapping const&) = delete;
+
+
+    /**
+     * @brief Move assignment
+    */
+    MemoryMapping& operator=(MemoryMapping&& other) noexcept
+    {
+        swap(other);
+        return *this;
+    }
+
+
+    /**
+     * @brief Swap two MemoryMapping objects
+     */
+    void swap(MemoryMapping& other) noexcept
+    {
+        std::swap(ptr_, other.ptr_);
+        std::swap(length_, other.length_);
+    }
+
 
     /**
      * @brief Get const pointer to the mapped memory
@@ -62,8 +108,9 @@ public:
         return ptr_;
     }
 
+
 private:
-    void * ptr_;
-    size_t length_;
+    void * ptr_ = nullptr;
+    size_t length_ = 0;
 };
 }

@@ -28,10 +28,10 @@ public:
      *
     */
     explicit MemoryMapping(size_t length, int prot, int flags, int fd, off_t offset = 0)
-    :   ptr_ {::mmap(nullptr, length, prot, flags, fd, offset)}
+    :   addr_ {::mmap(nullptr, length, prot, flags, fd, offset)}
     ,   length_ {length}
     {
-        if (ptr_ == MAP_FAILED)
+        if (addr_ == MAP_FAILED)
             throw std::system_error {errno, std::system_category(), "mmap() failed"};
     }
 
@@ -56,8 +56,8 @@ public:
     */
     ~MemoryMapping()
     {
-        if (ptr_)
-            ::munmap(ptr_, length_);
+        if (addr_)
+            ::munmap(addr_, length_);
     }
 
 
@@ -82,7 +82,7 @@ public:
      */
     void swap(MemoryMapping& other) noexcept
     {
-        std::swap(ptr_, other.ptr_);
+        std::swap(addr_, other.addr_);
         std::swap(length_, other.length_);
     }
 
@@ -92,9 +92,9 @@ public:
      *
      * @return const pointer to the mapped memory
     */
-    operator void const * () const noexcept
+    void const * addr() const noexcept
     {
-        return ptr_;
+        return addr_;
     }
 
 
@@ -103,14 +103,25 @@ public:
      *
      * @return pointer to the mapped memory
     */
-    operator void * () noexcept
+    void * addr() noexcept
     {
-        return ptr_;
+        return addr_;
+    }
+
+
+    /**
+     * @brief Get the length of the mapped memory region
+     *
+     * @return length in bytes
+    */
+    size_t length() const noexcept
+    {
+        return length_;
     }
 
 
 private:
-    void * ptr_ = nullptr;
+    void * addr_ = nullptr;
     size_t length_ = 0;
 };
 }

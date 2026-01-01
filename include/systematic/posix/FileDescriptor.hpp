@@ -19,6 +19,12 @@ class FileDescriptor
 {
 public:
     /**
+     * @brief Default constructor creates an invalid descriptor.
+    */
+    FileDescriptor() = default;
+
+
+    /**
      * @brief Attach to an existing file descriptor.
      *
      * @param descriptor existing file descriptor

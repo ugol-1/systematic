@@ -1,5 +1,7 @@
 #pragma once
 
+#include <systematic/posix/FileDescriptor.hpp>
+
 #include <unistd.h>
 
 #include <system_error>
@@ -7,6 +9,25 @@
 
 namespace systematic :: posix
 {
+    /**
+     * @brief Duplicate a file descriptor.
+     *
+     * @param fd File descriptor to duplicate.
+     *
+     * @return New FileDescriptor referring to the same file.
+     *
+     * @throw std::system_error if dup() fails.
+    */
+    inline FileDescriptor dup(int fd)
+    {
+        FileDescriptor new_fd {::dup(fd)};
+        if (new_fd < 0)
+            throw std::system_error {errno, std::system_category(), "dup() failed"};
+
+        return new_fd;
+    }
+
+
     /**
      * @brief Set the size of a file.
      *

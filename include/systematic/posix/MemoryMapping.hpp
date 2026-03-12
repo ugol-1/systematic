@@ -15,6 +15,12 @@ class MemoryMapping
 {
 public:
     /**
+     * @brief Default constructor creates an empty (unmapped) object.
+    */
+    MemoryMapping() = default;
+
+
+    /**
      * @brief Map a file to memory and store the pointer.
      *
      * @param length length of the mapped region in bytes

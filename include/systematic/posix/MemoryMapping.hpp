@@ -94,22 +94,15 @@ public:
 
 
     /**
-     * @brief Get const pointer to the mapped memory
+     * @brief Get pointer to the mapped memory.
      *
-     * @return const pointer to the mapped memory
-    */
-    void const * addr() const noexcept
-    {
-        return addr_;
-    }
-
-
-    /**
-     * @brief Get pointer to the mapped memory
+     * Const-ness of the MemoryMapping object governs the mapping's
+     * lifetime, not the mutability of the mapped region — that is
+     * determined by the prot flags passed to mmap().
      *
      * @return pointer to the mapped memory
     */
-    void * addr() noexcept
+    void * addr() const noexcept
     {
         return addr_;
     }

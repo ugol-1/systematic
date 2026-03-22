@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include <filesystem>
 #include <system_error>
 #include <utility>
 
@@ -43,11 +44,25 @@ public:
      *
      * @throw @a std::system_error if open() fails
     */
-    explicit FileDescriptor(std::string const& file_name, int flags)
-    :   descriptor_ {::open(file_name.c_str(), flags)}
+    explicit FileDescriptor(char const * file_name, int flags)
+    :   descriptor_ {::open(file_name, flags)}
     {
         if (descriptor_ < 0)
             throw std::system_error {errno, std::system_category(), "open() failed"};
+    }
+
+
+    /**
+     * @brief Open a file given a filesystem path.
+     *
+     * @param path path to the file to open
+     * @param flags file open flags, same as in open() (https://man7.org/linux/man-pages/man2/open.2.html)
+     *
+     * @throw @a std::system_error if open() fails
+    */
+    explicit FileDescriptor(std::filesystem::path const& path, int flags)
+    :   FileDescriptor {path.c_str(), flags}
+    {
     }
 
 
